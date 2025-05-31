@@ -1,5 +1,5 @@
+import { Coupon, dbToCoupon } from "../model/dao/Coupon";
 import { pgInstance } from "./database";
-import _ from 'lodash';
 
 export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
     const query = 'SELECT * FROM coupon WHERE code = $1';
@@ -10,7 +10,7 @@ export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
             return null
         }
 
-        return _.mapKeys(result.rows[0], (_v, k) => _.camelCase(k)) as Coupon
+        return dbToCoupon(result.rows[0])
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import Fastify, { fastify, FastifyInstance, RouteShorthandOptions } from "fastify";
 dotenv.config();
+import Fastify, { fastify, FastifyInstance, RouteShorthandOptions } from "fastify";
 
 import routes from "./controllers/routes";
 import { pgInstance } from "./repositories/database";
