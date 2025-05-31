@@ -1,31 +1,28 @@
-import Fastify, { FastifyInstance, RouteShorthandOptions } from "fastify";
+import dotenv from 'dotenv';
+import Fastify, { fastify, FastifyInstance, RouteShorthandOptions } from "fastify";
+dotenv.config();
+
+import routes from "./controllers/routes";
+import { pgInstance } from "./repositories/database";
 
 const server: FastifyInstance = Fastify({})
 
-const opts: RouteShorthandOptions = {
-    schema: {
-        response: {
-            200: {
-                type: 'object',
-                properties: {
-                    pong: {
-                        type: 'string'
-                    }
-                }
-            }
-        }
-    }
-}
+const spinUp = async () => {
 
-server.get("/ping", opts, async () => {
-    console.log("ping received")
-    return { pong: "it works!" }
-})
-
-const start = async () => {
     try {
-        console.log("starting server...")
-        await server.listen({ port: 3000 })
+        const client = await pgInstance.connect();
+        console.log("Connected to postgre");
+        client.release();
+    } catch (error) {
+        console.error("Failed to connect to postgres", error);
+    }
+
+    server.register(routes)
+
+    try {
+        const port = Number(process.env.PORT || 3000)
+        console.log(`Starting server on port ${port}`)
+        await server.listen({ port })
 
     } catch (err) {
         server.log.error(err)
@@ -33,4 +30,4 @@ const start = async () => {
     }
 }
 
-start()
+spinUp()

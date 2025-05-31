@@ -40,3 +40,4 @@ lib/*.*ts
 *.map
 
 dist
+.env
