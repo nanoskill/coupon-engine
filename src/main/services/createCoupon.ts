@@ -1,14 +1,25 @@
-import { createCouponReturn } from "../model/dto/Coupon";
-import { getCouponByCode } from "../repositories/coupon.repository"
+import { createCoupon, getCouponByCode } from "../repositories/coupon.repository"
 
-export default async (code: string): Promise<createCouponReturn | null> => {
-    const repoRes = await getCouponByCode(code);
-    if (repoRes == null) {
+export default async (req: createCouponRequest): Promise<createCouponReturn | null> => {
+
+    const res = await createCoupon({
+        code: req.code,
+        minimumPurchase: parseInt(req.minimumPurchase, 10),
+        validStartTime: new Date(req.validStartTime),
+        validEndTime: new Date(req.validEndTime),
+        type: req.type,
+        maxRedemption: req.maximumRedemption,
+        id: undefined,
+        redemptionCount: undefined
+    }, req.userId);
+
+    if (!res) {
         return null;
     }
+
     return {
-        id: repoRes.id,
-        code: repoRes.code,
+        id: res.id ?? 0,
+        code: res.code
     }
 
 }

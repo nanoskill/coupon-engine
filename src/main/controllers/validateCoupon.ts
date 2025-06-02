@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 
 import validateCouponService from "../services/validateCoupon";
+import getCouponByCode from "../services/getCouponByCode";
 
 export const handler = async (
     req: FastifyRequest<{
@@ -12,8 +13,7 @@ export const handler = async (
     const reqParam = req.params;
 
     try {
-        // const res = await validateCouponService(reqParam.code)
-        const res = null;
+        const res = await getCouponByCode(reqParam.code);
         if (res == null) {
             resp.status(404);
         }
